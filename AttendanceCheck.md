@@ -1,3 +1,1 @@
-
-
 >>Kunyanut (Gun): Chapter 4 - แนะนำ MongoDB
