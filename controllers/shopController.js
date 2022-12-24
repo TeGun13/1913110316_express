@@ -1,4 +1,5 @@
 const Shop = require('../models/shop');
+const Menu = require('../models/menu')
 
 exports.Shop= async (req, res, next) => {
     // res.render('index', { title: 'Express' });
@@ -21,11 +22,11 @@ exports.Shop= async (req, res, next) => {
 }
 
 exports.menu = async (req , res) => {
-    const shop = await Menu.find()
+    const menu = await Menu.find()
       .select('name price')
       .populate('shop', 'name')
       .sort({ _id: -1 });
     res.send({
-      data: shop,
+      data: menu,
     });
 }

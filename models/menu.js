@@ -11,3 +11,5 @@ const menuSchema = new Schema(
 )
 
 const menu = mongoose.model('Menus', menuSchema)
+
+module.exports = menu
