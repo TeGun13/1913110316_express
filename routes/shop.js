@@ -1,10 +1,11 @@
 var express = require('express');
 var router = express.Router();
-const ShopController = require('../controllers/shopController')
+const { Shop,menu,show} = require("../controllers/shopController");
 
 /* GET home page. */
-router.get('/',ShopController.Shop);
-router.get('/menu',ShopController.menu);
+router.get('/',Shop);
+router.get('/menu',menu);
+router.get('/:id',show);
 
 
 
