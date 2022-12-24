@@ -4,6 +4,7 @@ const ShopController = require('../controllers/shopController')
 
 /* GET home page. */
 router.get('/',ShopController.Shop);
+router.get('/menu',ShopController.menu);
 
 
 

@@ -9,7 +9,8 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var Company = require('./routes/company');
 const Staff = require('./routes/staff');
-const Shop = require('./routes/shop');
+const ShopRouter = require('./routes/shop');
+
 
 var app = express();
 monogoose.connect('mongodb+srv://superdev:1913110316@1913110316-gun.d6si5ar.mongodb.net/RestfulAPI?retryWrites=true&w=majority',{useNewUrlParser: true, useUnifiedTopology: true})
@@ -24,6 +25,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/company', Company);
 app.use('/staff',Staff);
-app.use('/shop',Shop);
+app.use('/menu',ShopRouter);
+app.use('/shop',ShopRouter);
+
 
 module.exports = app;
