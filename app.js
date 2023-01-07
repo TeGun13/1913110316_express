@@ -10,11 +10,12 @@ var usersRouter = require('./routes/users');
 var Company = require('./routes/company');
 const Staff = require('./routes/staff');
 const ShopRouter = require('./routes/shop');
+const config = require('./config/index')
 
 
 
 var app = express();
-monogoose.connect('mongodb+srv://superdev:1913110316@1913110316-gun.d6si5ar.mongodb.net/RestfulAPI?retryWrites=true&w=majority',{useNewUrlParser: true, useUnifiedTopology: true})
+monogoose.connect(config.MONGODB_URI,{useNewUrlParser: true, useUnifiedTopology: true})
 
 app.use(logger('dev'));
 app.use(express.json());

@@ -1,16 +1,17 @@
 const Shop = require('../models/shop');
 const Menu = require('../models/menu')
+const config = require('../config')
 
 exports.Shop = async (req, res, next) => {
     // res.render('index', { title: 'Express' });
     const shops = await Shop.find()
-    .select('Name Photo Locaton')
+    .select('name photo locaton')
     .sort({ id: -1 });
     const shopWithPhotoDomin = shops.map((shop) => {
         return {
             id: shop._id,
             name: shop.name,
-            photo: `http://localhost:3000/images/${shop.photo}`,
+            photo: `${config.Domain}${shop.photo}`,
             location: shop.location
         }
     })
