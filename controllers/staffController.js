@@ -9,20 +9,20 @@ const config = require('../config/index')
 
 
 exports.staff = async (req, res, next) => {
-  //  const staff = await Staff.find().sort({ _id: -1 });
+    //  const staff = await Staff.find().sort({ _id: -1 });
 
-  const staff = await Staff.find()
-    .select("name photo location")
-    .sort({ _id: -1 });
+    const staff = await Staff.find()
+        .select("name photo location")
+        .sort({ _id: -1 });
 
-  const staffWithPhotoDomain = staff.map((staff, index) => {
-    return {
-        id: staff._id,
-        name: staff.name,
-        salary: staff.salary,
-        photo: `${config.Domain}images/${staff.photo}`
-      };
-  });
+    const staffWithPhotoDomain = staff.map((staff, index) => {
+        return {
+            id: staff._id,
+            name: staff.name,
+            salary: staff.salary,
+            photo: `${config.Domain}images/${staff.photo}`
+        };
+    });
     res.status(200).json({
         // data: staff
         data: staffWithPhotoDomain
@@ -33,12 +33,12 @@ exports.staff = async (req, res, next) => {
 
 exports.insert = async (req, res, next) => {
     // res.render('index', { title: 'Express' });
-    const { name, salary,photo} = req.body
+    const { name, salary, photo } = req.body
     let staff = new Staff({
         name: name,
         salary: salary,
         photo: photo && await saveImageToDisk(photo)
-        
+
     });
     await staff.save()
 
@@ -52,23 +52,37 @@ exports.destroy = async (req, res, next) => {
     try {
         const { id } = req.params;
         const staff = await Staff.deleteOne({ _id: id });
+        // if (staff.deleteCount === 0) {
+        //     throw new Error('ไม่พบข้อมูลผู้ใช้งาน')
+        // } else {
+        //     res.status(200).json({
+        //         message: 'ลบข้อมูลเรียบร้อยแล้ว'
+        //     })
+        // }
+
+        // new error
         if (staff.deleteCount === 0) {
-            throw new Error('ไม่พบข้อมูลผู้ใช้งาน')
-        } else {
-            res.status(200).json({
-                message: 'ลบข้อมูลเรียบร้อยแล้ว'
-            })
+            const error = new Error("ไม่พบข้อมูลผู้ใช้งาน");
+            error.statusCode = 404
+            throw error;
         }
-
-    } catch (error) {
-        res.status(400).json({
-            message: 'เกิดข้อผิดพลาด:' + error.message
-
+        res.status(200).json({
+            message: 'ลบข้อมูลเรียบร้อยแล้ว'
         })
+
+
+    } catch (e) {
+        // res.status(400).json({
+        //     message: 'เกิดข้อผิดพลาด:' + error.message
+        // })
+ 
+        //new error
+        const error =  new Error(`Error: ${e.message}`)
+        error.statusCode = 400
+        next(error)
+
     }
 }
-
-
 
 exports.show = async (req, res, next) => {
     // res.render('index', { title: 'Express' });
@@ -77,22 +91,36 @@ exports.show = async (req, res, next) => {
         const staff = await Staff.findOne({
             _id: id
         });
+        // if (!staff) {
+        //     throw new Error('ไม่พบผู้ใช้งาน')
+        // } else {
+        //     res.status(200).json({
+        //         data: staff
+        //     })
+        // }
 
+        //new error
         if (!staff) {
-            throw new Error('ไม่พบผู้ใช้งาน')
-        } else {
-            res.status(200).json({
-                data: staff
-
-            })
+            const error = new Error("ไม่พบผู้ใช้งาน");
+            error.statusCode = 404
+            throw error;
         }
 
-
-    } catch (error) {
-        res.status(400).json({
-            message: 'เกิดข้อผิดพลาด:' + error.message
-
+        res.status(200).json({
+            data: staff
         })
+
+
+    } catch (e) {
+        // res.status(400).json({
+        //     message: 'เกิดข้อผิดพลาด:' + error.message
+        // })
+
+        //new error
+        const error =  new Error(`Error: ${e.message}`)
+        error.statusCode = 400
+        next(error)
+
     }
 }
 
@@ -100,41 +128,51 @@ exports.show = async (req, res, next) => {
 exports.update = async (req, res, next) => {
     // res.render('index', { title: 'Express' });
     try {
-        const {id} = req.params
+        const { id } = req.params
         const { name, salary } = req.body
 
-        const staff = await Staff.findById(id)
-        staff.name = name
-        staff.salary = salary
-        
-        // const staff = await Staff.updateOne({ _id: id },{
-        //     name: name,
-        //     salary: salary,
-        //     });
+        // const staff = await Staff.findById(id)
+        // staff.name = name
+        // staff.salary = salary
+        const staff = await Staff.updateOne({ _id: id },{
+            name: name,
+            salary: salary,
+            });
 
+        //new error
+        if (!staff.modifiedCount) {
+              const error =  new Error("No Staff was modified")
+              error.statusCode = 405
+              next(error);
+          }
         await staff.save()
-        
+
         res.status(200).json({
             message: 'แก้ไขข้อมูลเรียบร้อยแล้ว',
 
         })
-    } catch (error) {
-        res.status(400).json({
-            message: 'เกิดข้อผิดพลาด:' + error.message
+    } catch (e) {
+        // res.status(400).json({
+        //     message: 'เกิดข้อผิดพลาด:' + error.message
 
-        })
+        // })
+
+        //new error
+        const error =  new Error(`Error: ${e.message}`)
+        error.statusCode = 404
+        next(error);
 
     }
 }
 
 async function saveImageToDisk(baseImage) {
     //หา path จริงของโปรเจค
-    const projectPath = path.resolve('./') ;
+    const projectPath = path.resolve('./');
     //โฟลเดอร์และ path ของการอัปโหลด
     const uploadPath = `${projectPath}/public/images/`;
 
     //หานามสกุลไฟล์
-    const ext = baseImage.substring(baseImage.indexOf("/")+1, baseImage.indexOf(";base64"));
+    const ext = baseImage.substring(baseImage.indexOf("/") + 1, baseImage.indexOf(";base64"));
 
     //สุ่มชื่อไฟล์ใหม่ พร้อมนามสกุล
     let filename = '';
@@ -148,7 +186,7 @@ async function saveImageToDisk(baseImage) {
     let image = decodeBase64Image(baseImage);
 
     //เขียนไฟล์ไปไว้ที่ path
-    await writeFileAsync(uploadPath+filename, image.data, 'base64');
+    await writeFileAsync(uploadPath + filename, image.data, 'base64');
     //return ชื่อไฟล์ใหม่ออกไป
     return filename;
 }

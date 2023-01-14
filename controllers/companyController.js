@@ -51,19 +51,34 @@ exports.destroy = async (req, res, next) => {
   try {
       const { id } = req.params;
       const company = await Company.deleteOne({ _id: id });
-      if (company.deleteCount === 0) {
-          throw new Error('ไม่พบข้อมูลผู้ใช้งาน')
-      } else {
-          res.status(200).json({
-              message: 'ลบข้อมูลเรียบร้อยแล้ว'
-          })
-      }
+    //   if (company.deleteCount === 0) {
+    //       throw new Error('ไม่พบข้อมูลผู้ใช้งาน')
+    //   } else {
+    //       res.status(200).json({
+    //           message: 'ลบข้อมูลเรียบร้อยแล้ว'
+    //       })
+    //   }
 
-  } catch (error) {
-      res.status(400).json({
-          message: 'เกิดข้อผิดพลาด:' + error.message
+    if (company.deleteCount === 0) {
+        const error = new Error("ไม่พบผู้ใช้งาน");
+        error.statusCode = 400
+        throw error;
+          } else {
+              res.status(200).json({
+                  message: 'ลบข้อมูลเรียบร้อยแล้ว'
+              })
+          }
 
-      })
+
+  } catch (e) {
+    //   res.status(400).json({
+    //       message: 'เกิดข้อผิดพลาด:' + error.message
+
+    //   })
+
+    const error =  new Error(`Error: ${e.message}`)
+    error.statusCode = 404
+    next(error);
   }
 }
 
@@ -78,7 +93,9 @@ exports.show = async (req, res, next) => {
       });
 
       if (!company) {
-          throw new Error('ไม่พบผู้ใช้งาน')
+        const error = new Error("ไม่พบผู้ใช้งาน");
+        error.statusCode = 400
+        throw error;
       } else {
           res.status(200).json({
               data: company
@@ -87,11 +104,15 @@ exports.show = async (req, res, next) => {
       }
 
 
-  } catch (error) {
-      res.status(400).json({
-          message: 'เกิดข้อผิดพลาด:' + error.message
+  } catch (e) {
+    //   res.status(400).json({
+    //       message: 'เกิดข้อผิดพลาด:' + error.message
 
-      })
+    //   })
+
+    const error =  new Error(`Error: ${e.message}`)
+    error.statusCode = 404
+    next(error);
   }
 }
 
@@ -106,18 +127,26 @@ exports.update = async (req, res, next) => {
       company.name = name
       company.address = address
 
-      await company.save()
+    //   await company.save()
       
-      res.status(200).json({
-          message: 'แก้ไขข้อมูลเรียบร้อยแล้ว',
+    //   res.status(200).json({
+    //       message: 'แก้ไขข้อมูลเรียบร้อยแล้ว',
 
-      })
-  } catch (error) {
-      res.status(400).json({
-          message: 'เกิดข้อผิดพลาด:' + error.message
+    //   })
 
-      })
 
+
+
+  } catch (e) {
+    //   res.status(400).json({
+    //       message: 'เกิดข้อผิดพลาด:' + error.message
+
+    //   })
+
+    //new error
+    const error =  new Error(`Error: ${e.message}`)
+    error.statusCode = 404
+    next(error);
   }
 }
 
