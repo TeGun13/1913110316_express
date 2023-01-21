@@ -13,7 +13,6 @@ const schema = new Schema({
 
 schema.methods.encryptPassword = async function (password) {
     const salt = await bcrypt.genSalt(5)
-    // const hashPassword = await bcrypt.hash(password,salt)
     const hashPassword = await bcrypt.hash(password,salt)
     return hashPassword
 }

@@ -1,24 +1,14 @@
 var express = require('express');
 var router = express.Router();
+const userController = require('../controllers/userController')
+const { body } = require('express-validator');
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  // res.send('Hello baboi');
-  res.status(200).json({
-    Fullname:'Kunyanut Techaphalangrak'
-  })
-
-});
-
-router.get('/bio', function(req, res, next) {
-  // res.send('Hello baboi');
-  res.status(200).json({
-    Fullname:'Kunyanut Techaphalangrak',
-    Nickname:"Gun",
-    Hobby:"Drawning",
-    GithubUsername:"TeGun13"
-  })
-
-});
-
+router.get('/', userController.index);
+router.get('/', userController.bio);
+router.post('/',[   
+     body('name').not().isEmpty().withMessage('กรุณาใส่ชื่อ นามสกุล'),
+     body('email').not().isEmpty().withMessage('กรุณาใส่อีเมล').isEmail().withMessage('รูปแบบอีเมลไม่ถูกต้อง'),
+     body('password').not().isEmpty().withMessage('กรุณาใส่รหัสผ่านด้วย').isLength({min:5}).withMessage('รหัสผ่านต้อง 5 ตัวอักษรขึ้นไป')
+    ], userController.register);
 module.exports = router;
