@@ -7,7 +7,7 @@ const ExtractJwt = require('passport-jwt').ExtractJwt
 
 const opts = {}
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()
-opts.secretOrKey = "con.JWT_SECRET";
+opts.secretOrKey = con.JWT_SECRET;
 // opts.issuer = "accounts.examplesoft.com";
 // opts.audience = "yoursite.net";
 
