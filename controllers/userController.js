@@ -113,3 +113,12 @@ exports.login = async (req, res, next) => {
     next(error);
   }
 };
+
+
+exports.profile = function (req, res, next) {
+  // res.send('Hello baboi');
+  res.status(200).json({
+    user:req.user
+  })
+
+}

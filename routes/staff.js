@@ -5,7 +5,7 @@ const { body } = require('express-validator');
 const passportJWT = require('../middleware/passportJWT')
 
 /* GET home page. */
-rount.get('/',[passportJWT.isLogin],StaffController.index)
+router.get('/',[passportJWT.isLogin],StaffController.index)
 router.get('/',StaffController.staff);
 router.get('/:id',StaffController.show);
 router.post('/',
