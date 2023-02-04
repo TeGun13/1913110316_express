@@ -216,3 +216,12 @@ function decodeBase64Image(base64Str) {
 
     return image;
 }
+
+
+exports.index = function (req, res, next) {
+    // res.send('Hello baboi');
+    res.status(200).json({
+      Fullname: 'Kunyanut Techaphalangrak'
+    })
+  
+  }

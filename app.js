@@ -10,9 +10,10 @@ var usersRouter = require('./routes/users');
 var Company = require('./routes/company');
 const Staff = require('./routes/staff');
 const ShopRouter = require('./routes/shop');
-const config = require('./config/index')
+const config = require('./config/index');
+const passport = require('passport');
 
-
+const errorHandle = require('./middleware/errorHandle')
 
 var app = express();
 monogoose.connect(config.MONGODB_URI,{useNewUrlParser: true, useUnifiedTopology: true})
@@ -25,6 +26,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(passport.initialize)
+
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
 app.use('/company', Company);
@@ -32,5 +35,6 @@ app.use('/staff',Staff);
 app.use('/menu',ShopRouter);
 app.use('/shop',ShopRouter);
 
+app.use(errorHandle);
 
 module.exports = app;
