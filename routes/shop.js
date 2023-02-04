@@ -8,7 +8,7 @@ router.get('/', Shop);
 router.get('/menu', menu);
 router.get('/:id', show);
 
-router.post('/'
+router.post('/',
 [
     body("name").not().isEmpty().withMessage("Name cannot be empty."),
     body("location")
