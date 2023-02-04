@@ -1,1 +1,3 @@
->>Kunyanut (Gun): Chapter 7 - กํารใชง้ําน Environment ใน Node.js และกํารทำระบบ Login
+>>Kunyanut (Gun): Chapter 10 -กํารท ําระบบล็อกอนิตํามมําตรฐําน JSON Web
+Token ดว้ย Passport.js และ กํารตรวจสอบควําม
+ถกู ตอ้ งของขอ้มลู (Validation)
