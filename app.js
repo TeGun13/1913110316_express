@@ -13,6 +13,8 @@ const ShopRouter = require('./routes/shop');
 const config = require('./config/index');
 const passport = require('passport');
 
+const MonitorRouter = require('./routes/monitor')
+
 const errorHandle = require('./middleware/errorHandle')
 
 var app = express();
@@ -34,6 +36,8 @@ app.use('/company', Company);
 app.use('/staff',Staff);
 app.use('/menu',ShopRouter);
 app.use('/shop',ShopRouter);
+
+app.use('/monitor',MonitorRouter);
 
 app.use(errorHandle);
 
